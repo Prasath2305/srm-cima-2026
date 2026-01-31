@@ -5,23 +5,29 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get('session_token')?.value;
   const path = request.nextUrl.pathname;
 
-  // Public paths that don't require auth
-  const publicPaths = ['/login', '/reset-password', '/api/auth'];
-  const isPublicPath = publicPaths.some(p => path.startsWith(p));
+  // Public paths that don't require auth (add your homepage and other marketing pages here)
+  const publicPaths = ['/', '/login', '/reset-password', '/api/auth'];
+  
+  // Check if current path is public (exact match or starts with /api/auth)
+  const isPublicPath = publicPaths.some(p => 
+    path === p || (p !== '/' && path.startsWith(p))
+  );
 
   // If no token and trying to access protected route
   if (!token && !isPublicPath) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // If has token and trying to access login, redirect to register (or dashboard)
-  if (token && path === '/login') {
-    return NextResponse.redirect(new URL('/register', request.url));
+  // If has token and trying to access login, redirect to dashboard (or register if they haven't completed registration)
+  if (token && (path === '/login' || path === '/')) {
+    // Optional: Redirect logged-in users away from homepage to dashboard
+    // Remove this if you want logged-in users to still see the homepage
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.png$|.*\\.jpg$).*)'],
 };
