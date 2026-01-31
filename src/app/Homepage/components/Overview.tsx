@@ -1,8 +1,16 @@
 'use client';
 
 import Button from '@/components/ui/Button';
+import { useRouter } from 'next/navigation';
+
 
 export default function Overview() {
+  const router = useRouter();
+
+  const handleAbout = async () => {
+    router.push('/about');
+  };
+
   return (
     <section className="relative w-full bg-white px-10 py-24">
       <div className="mx-auto max-w-7xl">
@@ -33,9 +41,9 @@ export default function Overview() {
           that bridge theory and real-world applications.
         </p>
 
-        <div className="mt-14">
-          <Button>View Conference Details</Button>
-        </div>
+        {/* <div className="mt-14">
+          <Button onClick={handleAbout}>View Conference Details</Button>
+        </div> */}
       </div>
     </section>
   );

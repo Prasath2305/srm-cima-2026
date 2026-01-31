@@ -24,27 +24,29 @@ export default function Departments() {
 
         {/* Cards */}
         <div className="grid grid-cols-1 gap-6 md:flex md:gap-6 md:overflow-hidden">
-          <DepartmentCard
-            title="Computer Science"
-            description="Advanced computational research shaping intelligent systems and next-generation technologies."
-            image="https://images.unsplash.com/photo-1518770660439-4636190af475"
-            href="/departments/computer-science"
-            // focus={['Artificial Intelligence', 'Machine Learning', 'Cyber Security']}
-          />
-
+          
           <DepartmentCard
             title="Computer Applications"
             description="Industry-oriented applied computing focused on real-world problem solving."
             image="https://images.unsplash.com/photo-1521737604893-d14cc237f11d"
-            href="/departments/computer-applications"
+            href="https://www.srmist.edu.in/department/department-of-computer-applications/"
             // focus={['Applied AI', 'Software Systems', 'Data Science']}
           />
+
+          <DepartmentCard
+            title="Computer Science"
+            description="Advanced computational research shaping intelligent systems and next-generation technologies."
+            image="https://images.unsplash.com/photo-1518770660439-4636190af475"
+            href="https://www.srmist.edu.in/department/department-of-computer-science/"
+            // focus={['Artificial Intelligence', 'Machine Learning', 'Cyber Security']}
+          />
+
 
           <DepartmentCard
             title="Mathematics & Statistics"
             description="Mathematical foundations and statistical frameworks supporting computational intelligence."
             image="https://images.unsplash.com/photo-1509228468518-180dd4864904"
-            href="/departments/mathematics-statistics"
+            href="https://www.srmist.edu.in/department/department-of-mathematics-and-statistics/"
             // focus={['Statistical Inference', 'Optimization', 'Mathematical Modeling']}
           />
         </div>

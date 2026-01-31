@@ -9,7 +9,7 @@ export default function AboutConferenceSection() {
         {/* Image */}
         <div className="overflow-hidden rounded-[24px]">
           <img
-            src="/images/conference-about.jpg"
+            src="https://www.cio.com/wp-content/uploads/2025/03/217732-0-86829000-1742807934-shutterstock_2347235209.jpg?quality=50&strip=all"
             alt="Academic Conference Discussion"
             className="h-full w-full object-cover"
           />
@@ -51,9 +51,9 @@ export default function AboutConferenceSection() {
             </p>
           </div>
 
-          <div className="mt-14">
+          {/* <div className="mt-14">
             <Button>View Conference Details</Button>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

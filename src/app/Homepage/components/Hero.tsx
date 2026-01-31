@@ -171,13 +171,19 @@
 
 import { useEffect, useState } from 'react';
 import Button from '@/components/ui/Button';
+import { useRouter } from 'next/navigation';
 
 export default function Hero() {
+  const router = useRouter();
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
   }, []);
+
+  const handleAbout = async () => {
+    router.push('/about');
+  };
 
   return (
     <section className="w-full bg-[#EFEFE8] px-6 pt-6 md:pt-6">
@@ -221,20 +227,20 @@ export default function Hero() {
                 <img 
                   src="https://kapp-bucket.s3.ap-south-1.amazonaws.com/news-subdomain/thumbnail/1748448961111-srme.png" 
                   alt="Partner 1 Logo"
-                  className="h-12 w-auto opacity-90 hover:opacity-100 transition-opacity"
+                  className="h-20 w-auto opacity-90 hover:opacity-100 transition-opacity"
                 />
               </a>
               <a href="" target="_blank" rel="noopener noreferrer">
                 <img 
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzJqExYnzPYlln1NiRVUtSYwLgw1V9xPXv6Q&s" 
                   alt="Partner 2 Logo"
-                  className="h-12 w-auto opacity-90 hover:opacity-100 transition-opacity"
+                  className="h-20 w-auto opacity-90 hover:opacity-100 transition-opacity"
                 />
               </a>
             </div>
 
             <p className="mb-6 inline-flex items-center rounded-full bg-[#1E2A2A] px-4 py-2 text-xs font-medium tracking-wide text-[#CFFF9E]">
-              INTERNATIONAL CONFERENCE · HYBRID MODE · MARCH 2026
+              INTERNATIONAL CONFERENCE  · MARCH 2026
             </p>
 
             <h2 className="text-3xl md:text-5xl leading-[1.05] font-medium text-[#CFFF9E]">
@@ -256,7 +262,8 @@ export default function Hero() {
 
         {/* Bottom Right CTA */}
         <div className="absolute bottom-10 right-10 z-20">
-          <Button>About Event</Button>
+          
+          <Button onClick={handleAbout}>About Event</Button>
         </div>
       </div>
     </section>
