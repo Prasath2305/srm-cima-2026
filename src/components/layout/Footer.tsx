@@ -55,7 +55,7 @@ export default function Footer() {
             © 2026 CIMA. All rights reserved.
           </p>
           <p>
-            Designed & Developed by Prasath, Mohammed Vaseem, Mohammed Yasar
+            Designed & Developed by Chan's Team
           </p>
         </div>
       </div>
