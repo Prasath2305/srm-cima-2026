@@ -100,7 +100,7 @@
 //             <FileText className="w-8 h-8 text-[#FAFAF8]" />
 //           </div>
 //           <h1 className="text-3xl font-light text-[#1E2A2A] mb-1">CIMA'26</h1>
-//           <p className="text-[#607274] text-sm">Conference Management System</p>
+//           <p className="text-black text-sm">Conference Management System</p>
 //         </div>
 
 //         {/* Card */}
@@ -110,7 +110,7 @@
 //             <button
 //               onClick={() => { setMode('login'); setError(''); setSuccess(''); }}
 //               className={`flex-1 py-4 text-sm font-medium transition-colors relative ${
-//                 mode === 'login' ? 'text-[#1E2A2A]' : 'text-[#9CA3AF] hover:text-[#607274]'
+//                 mode === 'login' ? 'text-[#1E2A2A]' : 'text-black hover:text-black'
 //               }`}
 //             >
 //               Sign In
@@ -121,7 +121,7 @@
 //             <button
 //               onClick={() => { setMode('signup'); setError(''); setSuccess(''); }}
 //               className={`flex-1 py-4 text-sm font-medium transition-colors relative ${
-//                 mode === 'signup' ? 'text-[#1E2A2A]' : 'text-[#9CA3AF] hover:text-[#607274]'
+//                 mode === 'signup' ? 'text-[#1E2A2A]' : 'text-black hover:text-black'
 //               }`}
 //             >
 //               Create Account
@@ -170,7 +170,7 @@
 //                 <form onSubmit={handleSubmit} className="space-y-4">
 //                   {mode === 'signup' && (
 //                     <div className="space-y-2">
-//                       <label className="text-xs font-semibold text-[#607274] uppercase tracking-wider">
+//                       <label className="text-xs font-semibold text-black uppercase tracking-wider">
 //                         Full Name
 //                       </label>
 //                       <div className="relative">
@@ -180,7 +180,7 @@
 //                           required
 //                           value={fullName}
 //                           onChange={(e) => setFullName(e.target.value)}
-//                           className="w-full pl-10 pr-4 py-3 text-black rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#607274] focus:border-transparent transition-all bg-[#FAFAF8]"
+//                           className="w-full pl-10 pr-4 py-3 text-black rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all bg-[#FAFAF8]"
 //                           placeholder="Dr. John Doe"
 //                         />
 //                       </div>
@@ -188,7 +188,7 @@
 //                   )}
 
 //                   <div className="space-y-2">
-//                     <label className="text-xs font-semibold text-[#607274] uppercase tracking-wider">
+//                     <label className="text-xs font-semibold text-black uppercase tracking-wider">
 //                       Email Address
 //                     </label>
 //                     <div className="relative">
@@ -198,7 +198,7 @@
 //                         required
 //                         value={email}
 //                         onChange={(e) => setEmail(e.target.value)}
-//                         className="w-full pl-10 pr-4 py-3 text-black     rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#607274] focus:border-transparent transition-all bg-[#FAFAF8]"
+//                         className="w-full pl-10 pr-4 py-3 text-black     rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all bg-[#FAFAF8]"
 //                         placeholder="you@university.edu"
 //                       />
 //                     </div>
@@ -206,7 +206,7 @@
 
 //                   {mode !== 'forgot' && (
 //                     <div className="space-y-2">
-//                       <label className="text-xs font-semibold text-[#607274] uppercase tracking-wider">
+//                       <label className="text-xs font-semibold text-black uppercase tracking-wider">
 //                         Password
 //                       </label>
 //                       <div className="relative">
@@ -217,12 +217,12 @@
 //                           minLength={6}
 //                           value={password}
 //                           onChange={(e) => setPassword(e.target.value)}
-//                           className="w-full pl-10 pr-4 py-3 text-black rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#607274] focus:border-transparent transition-all bg-[#FAFAF8]"
+//                           className="w-full pl-10 pr-4 py-3 text-black rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all bg-[#FAFAF8]"
 //                           placeholder="••••••••"
 //                         />
 //                       </div>
 //                       {mode === 'signup' && (
-//                         <p className="text-xs text-[#9CA3AF]">At least 6 characters</p>
+//                         <p className="text-xs text-black">At least 6 characters</p>
 //                       )}
 //                     </div>
 //                   )}
@@ -232,7 +232,7 @@
 //                       <button
 //                         type="button"
 //                         onClick={() => setMode('forgot')}
-//                         className="text-xs text-[#607274] hover:text-[#1E2A2A] underline"
+//                         className="text-xs text-black hover:text-[#1E2A2A] underline"
 //                       >
 //                         Forgot password?
 //                       </button>
@@ -242,7 +242,7 @@
 //                   <button
 //                     type="submit"
 //                     disabled={loading}
-//                     className="w-full py-3 bg-[#1E2A2A] text-[#FAFAF8] rounded-xl font-medium hover:bg-[#607274] transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:transform-none flex items-center justify-center gap-2 mt-6"
+//                     className="w-full py-3 bg-[#1E2A2A] text-[#FAFAF8] rounded-xl font-medium hover:bg-black transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:transform-none flex items-center justify-center gap-2 mt-6"
 //                   >
 //                     {loading ? (
 //                       <Loader2 className="animate-spin" size={20} />
@@ -260,7 +260,7 @@
 //                     <button
 //                       type="button"
 //                       onClick={() => setMode('login')}
-//                       className="w-full py-3 text-[#607274] text-sm hover:text-[#1E2A2A] transition-colors"
+//                       className="w-full py-3 text-black text-sm hover:text-[#1E2A2A] transition-colors"
 //                     >
 //                       Back to sign in
 //                     </button>
@@ -271,7 +271,7 @@
 //           </div>
 //         </div>
 
-//         <p className="text-center text-xs text-[#9CA3AF] mt-8">
+//         <p className="text-center text-xs text-black mt-8">
 //           © 2026 CIMA. Secure authentication system.
 //         </p>
 //       </motion.div>
@@ -435,7 +435,7 @@ export default function AuthPage() {
             <FileText className="w-8 h-8 text-[#FAFAF8]" />
           </div>
           <h1 className="text-3xl font-light text-[#1E2A2A] mb-1">CIMA'26</h1>
-          <p className="text-[#607274] text-sm">Conference Management System</p>
+          <p className="text-black text-sm">Conference Management System</p>
         </div>
 
         {/* Card */}
@@ -445,7 +445,7 @@ export default function AuthPage() {
             <button
               onClick={() => switchMode('login')}
               className={`flex-1 py-4 text-sm font-medium transition-colors relative ${
-                mode === 'login' ? 'text-[#1E2A2A]' : 'text-[#9CA3AF] hover:text-[#607274]'
+                mode === 'login' ? 'text-[#1E2A2A]' : 'text-black hover:text-black'
               }`}
             >
               Sign In
@@ -456,7 +456,7 @@ export default function AuthPage() {
             <button
               onClick={() => switchMode('signup')}
               className={`flex-1 py-4 text-sm font-medium transition-colors relative ${
-                mode === 'signup' ? 'text-[#1E2A2A]' : 'text-[#9CA3AF] hover:text-[#607274]'
+                mode === 'signup' ? 'text-[#1E2A2A]' : 'text-black hover:text-black'
               }`}
             >
               Create Account
@@ -508,17 +508,17 @@ export default function AuthPage() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {mode === 'signup' && (
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-[#607274] uppercase tracking-wider">
+                      <label className="text-xs font-semibold text-black uppercase tracking-wider">
                         Full Name
                       </label>
                       <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" size={18} />
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 text-black" size={18} />
                         <input
                           type="text"
                           required
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
-                          className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#607274] focus:border-transparent transition-all bg-[#FAFAF8]"
+                          className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all bg-[#FAFAF8]"
                           placeholder="Dr. John Doe"
                         />
                       </div>
@@ -526,17 +526,17 @@ export default function AuthPage() {
                   )}
 
                   <div className="space-y-2">
-                    <label className="text-xs font-semibold text-[#607274] uppercase tracking-wider">
+                    <label className="text-xs font-semibold text-black uppercase tracking-wider">
                       Email Address
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" size={18} />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-black" size={18} />
                       <input
                         type="email"
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#607274] focus:border-transparent transition-all bg-[#FAFAF8]"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all bg-[#FAFAF8]"
                         placeholder="you@university.edu"
                       />
                     </div>
@@ -544,30 +544,30 @@ export default function AuthPage() {
 
                   {mode !== 'forgot' && (
                     <div className="space-y-2">
-                      <label className="text-xs font-semibold text-[#607274] uppercase tracking-wider">
+                      <label className="text-xs font-semibold text-black uppercase tracking-wider">
                         Password
                       </label>
                       <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" size={18} />
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-black" size={18} />
                         <input
                           type={showPassword ? 'text' : 'password'}
                           required
                           minLength={6}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="w-full pl-10 pr-12 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#607274] focus:border-transparent transition-all bg-[#FAFAF8]"
+                          className="w-full pl-10 pr-12 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all bg-[#FAFAF8]"
                           placeholder="••••••••"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#1E2A2A] transition-colors"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-black hover:text-[#1E2A2A] transition-colors"
                         >
                           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
                       </div>
                       {mode === 'signup' && (
-                        <p className="text-xs text-[#9CA3AF]">At least 6 characters</p>
+                        <p className="text-xs text-black">At least 6 characters</p>
                       )}
                     </div>
                   )}
@@ -577,7 +577,7 @@ export default function AuthPage() {
                       <button
                         type="button"
                         onClick={() => switchMode('forgot')}
-                        className="text-xs text-[#607274] hover:text-[#1E2A2A] underline transition-colors"
+                        className="text-xs text-black hover:text-[#1E2A2A] underline transition-colors"
                       >
                         Forgot password?
                       </button>
@@ -587,7 +587,7 @@ export default function AuthPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3 bg-[#1E2A2A] text-[#FAFAF8] rounded-xl font-medium hover:bg-[#607274] transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
+                    className="w-full py-3 bg-[#1E2A2A] text-[#FAFAF8] rounded-xl font-medium hover:bg-black transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
                   >
                     {loading ? (
                       <>
@@ -609,7 +609,7 @@ export default function AuthPage() {
                     <button
                       type="button"
                       onClick={() => switchMode('login')}
-                      className="w-full py-3 text-[#607274] text-sm hover:text-[#1E2A2A] transition-colors"
+                      className="w-full py-3 text-black text-sm hover:text-[#1E2A2A] transition-colors"
                     >
                       Back to sign in
                     </button>
@@ -620,7 +620,7 @@ export default function AuthPage() {
           </div>
         </div>
 
-        <p className="text-center text-xs text-[#9CA3AF] mt-8">
+        <p className="text-center text-xs text-black mt-8">
           © 2026 CIMA. Secure authentication system.
         </p>
       </motion.div>

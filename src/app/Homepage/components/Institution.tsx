@@ -2,7 +2,7 @@
 
 export default function Institution() {
   return (
-    <section className="relative w-full bg-[#EFEFE8] py-32">
+    <section className="relative w-full bg-[#EFEFE8] py-12">
       
       {/* Background Image */}
       <div
@@ -39,7 +39,7 @@ export default function Institution() {
               </h2>
 
               <div className="mt-12 space-y-4">
-                <p className="text-sm leading-relaxed text-[#4F5F5F] text-justify">
+                <p className="text-sm md:text-2xl leading-relaxed text-[#4F5F5F] text-justify">
                   SRM Institute of Science and Technology (SRM IST), formerly
                   known as SRM University, is one of India’s top-ranking
                   universities with a vibrant academic community of over 20,000
@@ -47,7 +47,7 @@ export default function Institution() {
                   campuses.
                 </p>
 
-                <p className="text-sm leading-relaxed text-[#4F5F5F] text-justify">
+                <p className="text-sm md:text-2xl leading-relaxed text-[#4F5F5F] text-justify">
                   The university offers a wide range of undergraduate,
                   postgraduate, and doctoral programmes across Engineering,
                   Management, Medicine, Health Sciences, Science, and
@@ -68,14 +68,14 @@ export default function Institution() {
               </h3>
 
               <div className="mt-8 space-y-4">
-                <p className="text-sm leading-relaxed text-[#4F5F5F] text-justify">
+                <p className="text-sm md:text-2xl leading-relaxed text-[#4F5F5F] text-justify">
                   Established in 2003, the Faculty of Science and Humanities
                   (FSH) at SRMIST, Kattankulathur, has grown into a vibrant
                   academic ecosystem with 24 departments, over 7,500 students,
                   250+ faculty members, and 180 research scholars.
                 </p>
 
-                <p className="text-sm leading-relaxed text-[#4F5F5F] text-justify">
+                <p className="text-sm md:text-2xl leading-relaxed text-[#4F5F5F] text-justify">
                   The faculty remains deeply committed to addressing global
                   challenges through interdisciplinary education, research,
                   and distinctive academic programmes that foster innovation,

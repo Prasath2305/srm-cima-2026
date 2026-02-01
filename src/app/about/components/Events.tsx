@@ -2,22 +2,20 @@
 
 export default function ConferenceEvents() {
   return (
-    <section className="w-full bg-white px-6 py-24">
+    <section className="w-full bg-white px-6 py-14">
       <div className="mx-auto max-w-7xl">
         {/* Section Header */}
-        <div className="mb-16 max-w-3xl">
+        <div className="mb-16 ">
           <div className="mb-6 inline-flex items-center gap-3 rounded-full bg-white px-4 py-2 text-xs font-medium tracking-wide text-[#1E2A2A]">
             <span className="h-2 w-2 rounded-full bg-[#CFFF9E]" />
             CONFERENCE EVENTS
           </div>
 
           <h2 className="text-3xl md:text-5xl leading-[1.1] font-medium text-[#1E2A2A]">
-            CIMA 2026 is structured around
-            <br />
-            three complementary academic events.
+            CIMA 2026 is structured around three complementary academic events.
           </h2>
 
-          <p className="mt-6 text-sm leading-relaxed text-[#4B5B5B]">
+          <p className="mt-6 text-sm md:text-2xl leading-relaxed text-[#4B5B5B] text-justify">
             Each event format plays a distinct role in knowledge exchange and
             collaboration, together shaping a comprehensive and impactful
             conference experience.

@@ -2,7 +2,7 @@
 
 export default function SpeakersSection() {
   return (
-    <section className="w-full bg-[#EFEFE8] px-6 py-24">
+    <section className="w-full bg-[#EFEFE8] px-6 py-14">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-16 max-w-3xl">

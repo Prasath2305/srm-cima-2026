@@ -2,7 +2,7 @@
 
 export default function Programme() {
   return (
-    <section className="relative w-full bg-[#EFEFE8] px-6 py-28">
+    <section className="relative w-full bg-[#EFEFE8] px-6 py-20">
       <div className="mx-auto max-w-7xl">
         {/* Tag */}
         <div className="mb-10 inline-flex items-center gap-3 rounded-full bg-white px-4 py-2 text-xs font-medium tracking-wide text-[#607274] shadow-sm">
@@ -11,7 +11,7 @@ export default function Programme() {
         </div>
 
         {/* Heading */}
-        <h2 className="max-w-5xl text-5xl md:text-7xl leading-[1.05] font-medium text-[#607274]">
+        <h2 className="max-w-6xl text-5xl md:text-7xl leading-[1.05] font-medium text-[#607274]">
           Two Days of
           <span className="block text-[#9C8F86]">
             Research, Innovation & Exchange
@@ -19,7 +19,7 @@ export default function Programme() {
         </h2>
 
         {/* Cards */}
-        <div className="mt-20 grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2">
           {[
             {
               day: 'DAY 01 · 12 MARCH 2026',

@@ -4,7 +4,7 @@ import PricingTicket from '@/components/ui/PricingTicket';
 
 export default function Pricing() {
   return (
-    <section className="w-full bg-white px-6 py-28">
+    <section className="w-full bg-white px-6 py-10">
       <div className="mx-auto max-w-7xl">
 
         {/* Heading */}

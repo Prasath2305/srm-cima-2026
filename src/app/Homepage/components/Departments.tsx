@@ -4,7 +4,7 @@ import DepartmentCard from '@/components/ui/DepartmentCard';
 
 export default function Departments() {
   return (
-    <section className="w-full bg-white px-6 py-28">
+    <section className="w-full bg-white px-6 py-18">
       <div className="mx-auto max-w-7xl">
 
         {/* Heading */}

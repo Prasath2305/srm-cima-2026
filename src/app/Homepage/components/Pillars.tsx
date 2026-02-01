@@ -2,7 +2,7 @@
 
 export default function Pillars() {
   return (
-    <section className="w-full px-6 py-24 bg-white">
+    <section className="w-full px-6 pb-10 bg-white">
       <div className="mx-auto grid max-w-7xl grid-cols-1 overflow-hidden rounded-[28px] md:grid-cols-3 ">
         {/* Card 01 */}
         <div className="relative bg-[#CFFF9E] p-12">

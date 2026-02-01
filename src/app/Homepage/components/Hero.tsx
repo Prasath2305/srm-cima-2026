@@ -225,7 +225,7 @@ export default function Hero() {
             <div className="flex items-center gap-6 mb-8">
               <a href="https://logo1-link.com" target="_blank" rel="noopener noreferrer">
                 <img 
-                  src="https://kapp-bucket.s3.ap-south-1.amazonaws.com/news-subdomain/thumbnail/1748448961111-srme.png" 
+                  src="/assets/srmwhite.png" 
                   alt="Partner 1 Logo"
                   className="h-20 w-auto opacity-90 hover:opacity-100 transition-opacity"
                 />
