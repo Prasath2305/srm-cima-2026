@@ -2618,7 +2618,7 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-[#EFEFE8] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Header with logout */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-8 mt-20">
           <div className="text-center flex-1">
             <motion.div
               initial={{ y: -20, opacity: 0 }}
@@ -2636,12 +2636,13 @@ export default function RegisterPage() {
           </div>
           <button
             onClick={handleLogout}
-            className="fixed top-4 right-4 z-50 flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur border border-[#E5E7EB] rounded-full text-sm text-[#607274] hover:text-[#1E2A2A] hover:border-[#1E2A2A] transition-all shadow-sm"
+            className="absolute right-4 top-60 md:top-50 md:right-80 z-50 flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur border border-[#E5E7EB] rounded-full text-sm text-[#607274] hover:text-[#1E2A2A] hover:border-[#1E2A2A] transition-all shadow-sm"
           >
             <LogOut size={16} />
             Logout
-          </button>
+        </button>
         </div>
+        
 
         <div className="bg-white rounded-3xl shadow-xl border border-[#E5E7EB] overflow-hidden">
           <div className="p-8 md:p-12">

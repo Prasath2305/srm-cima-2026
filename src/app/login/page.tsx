@@ -174,13 +174,13 @@ export default function AuthPage() {
                         Full Name
                       </label>
                       <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" size={18} />
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 text-black" size={18} />
                         <input
                           type="text"
                           required
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
-                          className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#607274] focus:border-transparent transition-all bg-[#FAFAF8]"
+                          className="w-full pl-10 pr-4 py-3 text-black rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#607274] focus:border-transparent transition-all bg-[#FAFAF8]"
                           placeholder="Dr. John Doe"
                         />
                       </div>
@@ -192,13 +192,13 @@ export default function AuthPage() {
                       Email Address
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" size={18} />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-black" size={18} />
                       <input
                         type="email"
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#607274] focus:border-transparent transition-all bg-[#FAFAF8]"
+                        className="w-full pl-10 pr-4 py-3 text-black     rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#607274] focus:border-transparent transition-all bg-[#FAFAF8]"
                         placeholder="you@university.edu"
                       />
                     </div>
@@ -210,14 +210,14 @@ export default function AuthPage() {
                         Password
                       </label>
                       <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" size={18} />
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-black" size={18} />
                         <input
                           type="password"
                           required
                           minLength={6}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#607274] focus:border-transparent transition-all bg-[#FAFAF8]"
+                          className="w-full pl-10 pr-4 py-3 text-black rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#607274] focus:border-transparent transition-all bg-[#FAFAF8]"
                           placeholder="••••••••"
                         />
                       </div>
