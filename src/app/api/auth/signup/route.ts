@@ -1,18 +1,95 @@
+// import { NextRequest, NextResponse } from 'next/server';
+// import { supabaseAdmin } from '@/lib/db';
+// import { hashPassword, createSession } from '@/lib/auth';
+
+// export async function POST(req: NextRequest) {
+//   try {
+//     const { email, password, fullName } = await req.json();
+    
+//     // Validation
+//     if (!email || !password || !fullName) {
+//       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+//     }
+    
+//     if (password.length < 6) {
+//       return NextResponse.json({ error: 'Password must be at least 6 characters' }, { status: 400 });
+//     }
+    
+//     // Check if user exists
+//     const { data: existing } = await supabaseAdmin
+//       .from('users')
+//       .select('id')
+//       .eq('email', email.toLowerCase())
+//       .single();
+      
+//     if (existing) {
+//       return NextResponse.json({ error: 'Email already registered' }, { status: 409 });
+//     }
+    
+//     // Create user
+//     const passwordHash = await hashPassword(password);
+//     const { data: user, error } = await supabaseAdmin
+//       .from('users')
+//       .insert({
+//         email: email.toLowerCase(),
+//         password_hash: passwordHash,
+//         full_name: fullName,
+//       })
+//       .select()
+//       .single();
+      
+//     if (error || !user) {
+//       return NextResponse.json({ error: 'Failed to create account' }, { status: 500 });
+//     }
+    
+//     // // Create session
+//     // await createSession(user.id);
+    
+//     return NextResponse.json({ 
+//       success: true, 
+//       user: { id: user.id, email: user.email, name: user.full_name } 
+//     });
+    
+//   } catch (error) {
+//     console.error('Signup error:', error);
+//     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/db';
-import { hashPassword, createSession } from '@/lib/auth';
+import { hashPassword } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   try {
     const { email, password, fullName } = await req.json();
     
+    console.log('Signup attempt:', email); // Debug
+    
     // Validation
     if (!email || !password || !fullName) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'All fields are required' }, 
+        { status: 400 }
+      );
     }
     
     if (password.length < 6) {
-      return NextResponse.json({ error: 'Password must be at least 6 characters' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Password must be at least 6 characters' }, 
+        { status: 400 }
+      );
     }
     
     // Check if user exists
@@ -23,7 +100,10 @@ export async function POST(req: NextRequest) {
       .single();
       
     if (existing) {
-      return NextResponse.json({ error: 'Email already registered' }, { status: 409 });
+      return NextResponse.json(
+        { error: 'Email already registered. Please login.' }, 
+        { status: 409 }
+      );
     }
     
     // Create user
@@ -39,19 +119,27 @@ export async function POST(req: NextRequest) {
       .single();
       
     if (error || !user) {
-      return NextResponse.json({ error: 'Failed to create account' }, { status: 500 });
+      console.error('User creation error:', error);
+      return NextResponse.json(
+        { error: 'Failed to create account. Please try again.' }, 
+        { status: 500 }
+      );
     }
     
-    // // Create session
-    // await createSession(user.id);
+    console.log('User created:', user.id);
     
+    // Return success - let frontend redirect
     return NextResponse.json({ 
       success: true, 
-      user: { id: user.id, email: user.email, name: user.full_name } 
+      message: 'Account created successfully',
+      user: { id: user.id, email: user.email }
     });
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('Signup error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Internal server error' }, 
+      { status: 500 }
+    );
   }
 }
