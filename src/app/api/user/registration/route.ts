@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { pool } from '@/lib/db';
+import { validateSession } from '@/lib/auth';
 
 export async function GET() {
+  let connection;
+  
   try {
     const cookieStore = await cookies();
     const sessionToken = cookieStore.get('session_token')?.value;
@@ -16,21 +14,27 @@ export async function GET() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    const { data: session } = await supabase
-      .from('sessions')
-      .select('user_id')
-      .eq('token', sessionToken)
-      .single();
-
-    if (!session) {
+    const user = await validateSession();
+    if (!user) {
       return NextResponse.json({ error: 'Invalid session' }, { status: 401 });
     }
 
-    const { data: registration } = await supabase
-      .from('registrations')
-      .select('*')
-      .eq('user_id', session.user_id)
-      .single();
+    // Get connection
+    connection = await pool.getConnection();
+    
+    // Get user's registration
+    const [rows] = await connection.execute(
+      `SELECT 
+        r.*,
+        r.paper_id
+       FROM registrations r
+       WHERE r.user_id = ?
+       ORDER BY r.created_at DESC
+       LIMIT 1`,
+      [user.id]
+    );
+
+    const registration = (rows as any[])[0];
 
     if (!registration) {
       return NextResponse.json({ error: 'No registration found' }, { status: 404 });
@@ -38,7 +42,12 @@ export async function GET() {
 
     return NextResponse.json({ registration });
 
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Get registration error:', error);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  } finally {
+    if (connection) {
+      connection.release();
+    }
   }
 }

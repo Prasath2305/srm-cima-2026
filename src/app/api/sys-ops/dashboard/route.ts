@@ -1,19 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { pool } from '@/lib/db';
 import { verifyAdmin } from '../auth/route';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  }
-);
-
 export async function GET(req: NextRequest) {
+  let connection;
+  
   try {
     // Check admin auth
     const isAdmin = await verifyAdmin();
@@ -25,37 +16,61 @@ export async function GET(req: NextRequest) {
     const status = searchParams.get('status');
     const search = searchParams.get('search');
     
-    let query = supabase
-      .from('registrations')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    // Apply filters
+    // Get connection
+    connection = await pool.getConnection();
+    
+    // Base query with filters
+    let baseQuery = `
+      SELECT 
+        r.*, 
+        r.paper_id,
+        u.full_name as user_name,
+        u.email as user_email
+      FROM registrations r
+      LEFT JOIN users u ON r.user_id = u.id
+      WHERE 1=1
+    `;
+    
+    const params: any[] = [];
+    
+    // Apply status filter
     if (status && status !== 'all') {
-      query = query.eq('status', status);
+      baseQuery += ' AND r.status = ?';
+      params.push(status);
     }
-
+    
+    // Apply search filter (MySQL case-insensitive LIKE)
     if (search) {
-      query = query.or(
-        `author1_name.ilike.%${search}%,author_email.ilike.%${search}%,article_title.ilike.%${search}%`
-      );
+      baseQuery += ` AND (
+        LOWER(r.author1_name) LIKE LOWER(?) OR
+        LOWER(r.author_email) LIKE LOWER(?) OR
+        LOWER(r.article_title) LIKE LOWER(?)
+      )`;
+      const searchTerm = `%${search}%`;
+      params.push(searchTerm, searchTerm, searchTerm);
     }
-
-    const { data: registrations, error } = await query;
-
-    if (error) throw error;
-
-    // Get stats
-    const { data: stats } = await supabase
-      .from('registrations')
-      .select('status');
-
+    
+    baseQuery += ' ORDER BY r.created_at DESC';
+    
+    const [registrations] = await connection.execute(baseQuery, params);
+    
+    // Get efficient stats using SQL aggregation
+    const [statsRows] = await connection.execute(
+      `SELECT 
+        COUNT(*) as total,
+        SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
+        SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved,
+        SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected,
+        SUM(CASE WHEN status = 'under_review' THEN 1 ELSE 0 END) as under_review
+       FROM registrations`
+    );
+    
     const statsData = {
-      total: stats?.length || 0,
-      pending: stats?.filter(r => r.status === 'pending').length || 0,
-      approved: stats?.filter(r => r.status === 'approved').length || 0,
-      rejected: stats?.filter(r => r.status === 'rejected').length || 0,
-      under_review: stats?.filter(r => r.status === 'under_review').length || 0,
+      total: (statsRows as any[])[0].total,
+      pending: (statsRows as any[])[0].pending,
+      approved: (statsRows as any[])[0].approved,
+      rejected: (statsRows as any[])[0].rejected,
+      under_review: (statsRows as any[])[0].under_review,
     };
 
     return NextResponse.json({
@@ -69,10 +84,16 @@ export async function GET(req: NextRequest) {
       { error: error.message || 'Failed to fetch data' }, 
       { status: 500 }
     );
+  } finally {
+    if (connection) {
+      connection.release();
+    }
   }
 }
 
 export async function PATCH(req: NextRequest) {
+  let connection;
+  
   try {
     const isAdmin = await verifyAdmin();
     if (!isAdmin) {
@@ -88,27 +109,41 @@ export async function PATCH(req: NextRequest) {
       );
     }
 
-    const updateData: any = {
-      status,
-      updated_at: new Date().toISOString(),
-    };
-
+    // Get connection
+    connection = await pool.getConnection();
+    
+    // Build dynamic update query
+    let updateQuery = 'UPDATE registrations SET status = ?, updated_at = NOW()';
+    const updateParams: any[] = [status];
+    
     if (admin_comments !== undefined) {
-      updateData.admin_comments = admin_comments;
+      updateQuery += ', admin_comments = ?';
+      updateParams.push(admin_comments);
+    }
+    
+    updateQuery += ' WHERE id = ?';
+    updateParams.push(id);
+
+    const [updateResult] = await connection.execute(updateQuery, updateParams) as any[];
+    
+    if ((updateResult as any).affectedRows === 0) {
+      return NextResponse.json({ error: 'Registration not found' }, { status: 404 });
     }
 
-    const { data, error } = await supabase
-      .from('registrations')
-      .update(updateData)
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) throw error;
+    // Return updated record with user info
+    const [updatedRows] = await connection.execute(
+      `SELECT r.*, r.paper_id,
+             u.full_name as user_name,
+             u.email as user_email
+       FROM registrations r
+       LEFT JOIN users u ON r.user_id = u.id
+       WHERE r.id = ?`,
+      [id]
+    );
 
     return NextResponse.json({ 
       success: true, 
-      registration: data 
+      registration: (updatedRows as any[])[0] 
     });
 
   } catch (error: any) {
@@ -117,5 +152,9 @@ export async function PATCH(req: NextRequest) {
       { error: error.message || 'Update failed' }, 
       { status: 500 }
     );
+  } finally {
+    if (connection) {
+      connection.release();
+    }
   }
 }

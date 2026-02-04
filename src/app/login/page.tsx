@@ -430,10 +430,10 @@ export default function AuthPage() {
         className="w-full max-w-md"
       >
         {/* Logo/Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#1E2A2A] rounded-2xl mb-4 shadow-lg">
+        <div className="text-center mb-8 mt-20">
+          {/* <div className="inline-flex items-center justify-center w-16 h-16 bg-[#1E2A2A] rounded-2xl mb-4 shadow-lg">
             <FileText className="w-8 h-8 text-[#FAFAF8]" />
-          </div>
+          </div> */}
           <h1 className="text-3xl font-light text-[#1E2A2A] mb-1">CIMA'26</h1>
           <p className="text-black text-sm">Conference Management System</p>
         </div>
@@ -518,7 +518,7 @@ export default function AuthPage() {
                           required
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
-                          className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all bg-[#FAFAF8]"
+                          className="w-full pl-10 pr-4 py-3 rounded-xl text-black border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all bg-[#FAFAF8]"
                           placeholder="Dr. John Doe"
                         />
                       </div>
@@ -536,7 +536,7 @@ export default function AuthPage() {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all bg-[#FAFAF8]"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border text-black border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all bg-[#FAFAF8]"
                         placeholder="you@university.edu"
                       />
                     </div>
@@ -555,7 +555,7 @@ export default function AuthPage() {
                           minLength={6}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="w-full pl-10 pr-12 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all bg-[#FAFAF8]"
+                          className="w-full pl-10 pr-12 py-3 rounded-xl border text-black border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all bg-[#FAFAF8]"
                           placeholder="••••••••"
                         />
                         <button

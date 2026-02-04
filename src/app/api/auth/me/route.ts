@@ -1,47 +1,10 @@
-// import { NextResponse } from 'next/server';
-// import { validateSession, getRegistrationStatus } from '@/lib/auth';
-
-// export async function GET() {
-//   const user = await validateSession();
-  
-//   if (!user) {
-//     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
-//   }
-  
-//   const registration = await getRegistrationStatus(user.email);
-  
-//   return NextResponse.json({
-//     user: {
-//       id: user.id,
-//       email: user.email,
-//       name: user.full_name,
-//     },
-//     registrationStatus: registration ? {
-//       submitted: true,
-//       status: registration.status,
-//     } : {
-//       submitted: false,
-//     },
-//   });
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { supabaseAdmin } from '@/lib/db';
+import { pool } from '@/lib/db';
 
 export async function GET() {
+  let connection;
+  
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get('session_token')?.value;
@@ -53,13 +16,27 @@ export async function GET() {
       );
     }
     
-    // Get session
-    const { data: session } = await supabaseAdmin
-      .from('sessions')
-      .select('*, users(*)')
-      .eq('token', token)
-      .gt('expires_at', new Date().toISOString())
-      .single();
+    // Get connection
+    connection = await pool.getConnection();
+    
+    // Get session with user data - single query for performance
+    const [rows] = await connection.execute(
+      `SELECT 
+        s.id as session_id,
+        s.user_id,
+        s.expires_at,
+        u.id as user_id,
+        u.email,
+        u.full_name,
+        u.email_verified
+      FROM sessions s
+      JOIN users u ON s.user_id = u.id
+      WHERE s.token = ? 
+      AND s.expires_at > NOW()`,
+      [token]
+    );
+    
+    const session = (rows as any[])[0];
     
     if (!session) {
       return NextResponse.json(
@@ -70,9 +47,10 @@ export async function GET() {
     
     return NextResponse.json({
       user: {
-        id: session.users.id,
-        email: session.users.email,
-        name: session.users.full_name,
+        id: session.user_id,
+        email: session.email,
+        name: session.full_name,
+        emailVerified: session.email_verified
       }
     });
     
@@ -82,5 +60,9 @@ export async function GET() {
       { error: 'Server error' }, 
       { status: 500 }
     );
+  } finally {
+    if (connection) {
+      connection.release();
+    }
   }
 }

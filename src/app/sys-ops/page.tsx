@@ -51,13 +51,13 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4 mt-20">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4 ">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden mt-20">
           {/* Header */}
           <div className="bg-[#1E2A2A] px-8 py-12 text-center relative overflow-hidden">
             <div className="absolute inset-0 opacity-10">
@@ -99,7 +99,7 @@ export default function AdminLoginPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#1E2A2A] focus:border-transparent transition-all bg-[#FAFAF8]"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl text-black border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#1E2A2A] focus:border-transparent transition-all bg-[#FAFAF8]"
                     placeholder="admin@cima26.org"
                   />
                 </div>
@@ -116,7 +116,7 @@ export default function AdminLoginPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-12 py-3 rounded-xl border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#1E2A2A] focus:border-transparent transition-all bg-[#FAFAF8]"
+                    className="w-full pl-10 pr-12 py-3 rounded-xl text-black border border-[#E5E7EB] focus:outline-none focus:ring-2 focus:ring-[#1E2A2A] focus:border-transparent transition-all bg-[#FAFAF8]"
                     placeholder="••••••••"
                   />
                   <button

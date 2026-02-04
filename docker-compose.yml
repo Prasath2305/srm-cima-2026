@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cima-nextjs-app
+    ports:
+      - "3001:3000"
+    environment:
+      DB_HOST: cima-mysql-mpthcg
+      DB_PORT: 3306
+      DB_USER: cima_core_user
+      DB_PASSWORD: Srmfshktr
+      DB_NAME: cima_2026
+      EMAIL_ID: cimasrm2026@gmail.com
+      EMAIL_PIN: qxay wikx nfbh xccs
+      SESSION_SECRET: 0c3c903d53e4cf5b056972147c19eccf2802ccf6276a95c7b0942fea1c4b164d
+      ADMIN_ID: cimaadmin@gmail.com
+      ADMIN_PASS: 123456
+      NEXT_PUBLIC_URL: http://72.61.255.236:3001/
+      NODE_ENV: production
+    networks:
+      - dockploy_default
+    volumes:
+      - ./uploads:/app/public/uploads
+    restart: unless-stopped
+
+  adminer:
+    image: adminer:latest
+    container_name: cima-adminer
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: cima-mysql-mpthcg
+      ADMINER_DESIGN: pepa-linha-dark
+    networks:
+      - dockploy_default
+    restart: unless-stopped
+
+networks:
+  dockploy_default:
+    external: true

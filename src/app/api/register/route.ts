@@ -1,32 +1,13 @@
-import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-
-// Server-side Supabase client with service role
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  }
-);
-
-// Helper to validate session
-async function validateSession(token: string) {
-  const { data: session } = await supabase
-    .from('sessions')
-    .select('*, users(*)')
-    .eq('token', token)
-    .gt('expires_at', new Date().toISOString())
-    .single();
-  
-  return session?.users || null;
-}
+import { pool } from '@/lib/db';
+import { validateSession } from '@/lib/auth';
+import fs from 'fs/promises';
+import path from 'path';
 
 export async function POST(request: NextRequest) {
+  let connection;
+  
   try {
     // Check authentication
     const cookieStore = await cookies();
@@ -39,7 +20,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = await validateSession(sessionToken);
+    const user = await validateSession();
     if (!user) {
       return NextResponse.json(
         { error: 'Session expired. Please login again' },
@@ -48,12 +29,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user already has a registration
-    const { data: existingReg } = await supabase
-      .from('registrations')
-      .select('id, status')
-      .eq('user_id', user.id)
-      .single();
-
+    connection = await pool.getConnection();
+    const [existingRows] = await connection.execute(
+      'SELECT id, status FROM registrations WHERE user_id = ?',
+      [user.id]
+    );
+    
+    const existingReg = (existingRows as any[])[0];
     if (existingReg) {
       return NextResponse.json(
         { error: 'You have already submitted a registration', status: existingReg.status },
@@ -67,10 +49,10 @@ export async function POST(request: NextRequest) {
     const abstractFile = formData.get('abstractFile') as File;
     const paymentScreenshot = formData.get('paymentScreenshot') as File;
     
-    // Extract form fields - only include authors with names
+    // Extract form fields
     const data: any = {
       user_id: user.id,
-      author_email: user.email, // Use logged-in user's email
+      author_email: user.email,
       author_whatsapp: formData.get('author_whatsapp') as string,
       article_title: formData.get('article_title') as string,
       participant_type: formData.get('participant_type') as string,
@@ -79,26 +61,15 @@ export async function POST(request: NextRequest) {
       status: 'pending'
     };
 
-    // Process authors - only include non-empty ones
-    const authors = [];
+    // Process authors
     for (let i = 1; i <= 6; i++) {
       const name = formData.get(`author${i}_name`) as string;
       if (name && name.trim()) {
-        authors.push({
-          num: i,
-          designation: formData.get(`author${i}_designation`) as string || '',
-          name: name,
-          institution: formData.get(`author${i}_institution`) as string || ''
-        });
+        data[`author${i}_designation`] = formData.get(`author${i}_designation`) as string || '';
+        data[`author${i}_name`] = name;
+        data[`author${i}_institution`] = formData.get(`author${i}_institution`) as string || '';
       }
     }
-
-    // Add author fields to data
-    authors.forEach(author => {
-      data[`author${author.num}_designation`] = author.designation;
-      data[`author${author.num}_name`] = author.name;
-      data[`author${author.num}_institution`] = author.institution;
-    });
 
     // Validate required fields
     if (!abstractFile || !paymentScreenshot) {
@@ -115,92 +86,83 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let abstractFilePath = '';
-    let paymentScreenshotPath = '';
+    // Create uploads directory
+    const uploadsDir = path.join(process.cwd(), 'public/uploads');
+    await fs.mkdir(uploadsDir, { recursive: true });
+    
+    const filesDir = path.join(uploadsDir, 'files');
+    await fs.mkdir(filesDir, { recursive: true });
 
-    // Upload abstract file
+    // Save abstract file
+    let abstractFilePath = '';
     if (abstractFile) {
       const fileExt = abstractFile.name.split('.').pop();
-      const fileName = `${Date.now()}_${user.id}.${fileExt}`;
-      const filePath = `abstracts/${fileName}`;
-
+      const fileName = `abstracts/${Date.now()}_${user.id}.${fileExt}`;
+      const filePath = path.join(filesDir, fileName);
+      
       const arrayBuffer = await abstractFile.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-
-      const { error: uploadError } = await supabase.storage
-        .from('cima26-abstracts')
-        .upload(filePath, buffer, {
-          contentType: abstractFile.type,
-          cacheControl: '3600',
-          upsert: false,
-        });
-
-      if (uploadError) {
-        console.error('Abstract upload error:', uploadError);
-        return NextResponse.json(
-          { error: `Abstract upload failed: ${uploadError.message}` },
-          { status: 500 }
-        );
-      }
-
-      abstractFilePath = filePath;
+      await fs.writeFile(filePath, Buffer.from(arrayBuffer));
+      abstractFilePath = `uploads/files/${fileName}`;
     }
 
-    // Upload payment screenshot
+    // Save payment screenshot
+    let paymentScreenshotPath = '';
     if (paymentScreenshot) {
       const fileExt = paymentScreenshot.name.split('.').pop();
-      const fileName = `${Date.now()}_payment_${user.id}.${fileExt}`;
-      const filePath = `payment-screenshots/${fileName}`;
-
+      const fileName = `payments/${Date.now()}_payment_${user.id}.${fileExt}`;
+      const filePath = path.join(filesDir, fileName);
+      
       const arrayBuffer = await paymentScreenshot.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-
-      const { error: uploadError } = await supabase.storage
-        .from('cima26-abstracts')
-        .upload(filePath, buffer, {
-          contentType: paymentScreenshot.type,
-          cacheControl: '3600',
-          upsert: false,
-        });
-
-      if (uploadError) {
-        console.error('Payment screenshot upload error:', uploadError);
-        return NextResponse.json(
-          { error: `Payment screenshot upload failed: ${uploadError.message}` },
-          { status: 500 }
-        );
-      }
-
-      paymentScreenshotPath = filePath;
+      await fs.writeFile(filePath, Buffer.from(arrayBuffer));
+      paymentScreenshotPath = `uploads/files/${fileName}`;
     }
 
     // Insert into database
-    const { data: insertData, error: insertError } = await supabase
-      .from('registrations')
-      .insert([
-        {
-          ...data,
-          abstract_file_path: abstractFilePath,
-          payment_screenshot_path: paymentScreenshotPath,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-      ])
-      .select();
-
-    if (insertError) {
-      console.error('Database insert error:', insertError);
-      return NextResponse.json(
-        { error: `Database insert failed: ${insertError.message}` },
-        { status: 500 }
-      );
+    const authorFields = [];
+    const authorValues = [];
+    
+    for (let i = 1; i <= 6; i++) {
+      if (data[`author${i}_name`]) {
+        authorFields.push(`author${i}_designation, author${i}_name, author${i}_institution`);
+        authorValues.push(
+          data[`author${i}_designation`],
+          data[`author${i}_name`],
+          data[`author${i}_institution`]
+        );
+      }
     }
+
+    const insertQuery = `
+      INSERT INTO registrations (
+        id, user_id, author_email, author_whatsapp, article_title, participant_type, 
+        transaction_id, payment_date, abstract_file_path, payment_screenshot_path, status,
+        ${authorFields.join(', ')}
+      ) VALUES (
+        UUID(), ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ${authorValues.map(() => '?').join(', ')}
+      )
+    `;
+    
+    const insertParams = [
+      user.id, data.author_email, data.author_whatsapp, data.article_title,
+      data.participant_type, data.transaction_id, data.payment_date,
+      abstractFilePath, paymentScreenshotPath, ...authorValues
+    ];
+
+    const [result] = await connection.execute(insertQuery, insertParams);
+
+    // Get created registration with paper_id
+    const [newRegRows] = await connection.execute(
+      'SELECT * FROM registrations WHERE user_id = ? ORDER BY created_at DESC LIMIT 1',
+      [user.id]
+    );
+    
+    const newReg = (newRegRows as any[])[0];
 
     return NextResponse.json(
       { 
         success: true, 
         message: 'Registration submitted successfully',
-        data: insertData[0]
+        data: newReg
       },
       { status: 200 }
     );
@@ -211,11 +173,14 @@ export async function POST(request: NextRequest) {
       { error: error.message || 'Registration failed' },
       { status: 500 }
     );
+  } finally {
+    if (connection) connection.release();
   }
 }
 
-// Also handle GET to check registration status
 export async function GET() {
+  let connection;
+  
   try {
     const cookieStore = await cookies();
     const sessionToken = cookieStore.get('session_token')?.value;
@@ -224,21 +189,18 @@ export async function GET() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    const { data: session } = await supabase
-      .from('sessions')
-      .select('user_id')
-      .eq('token', sessionToken)
-      .single();
-
-    if (!session) {
+    const user = await validateSession();
+    if (!user) {
       return NextResponse.json({ error: 'Invalid session' }, { status: 401 });
     }
 
-    const { data: registration } = await supabase
-      .from('registrations')
-      .select('*')
-      .eq('user_id', session.user_id)
-      .single();
+    connection = await pool.getConnection();
+    const [rows] = await connection.execute(
+      'SELECT * FROM registrations WHERE user_id = ?',
+      [user.id]
+    );
+
+    const registration = (rows as any[])[0];
 
     return NextResponse.json({ 
       hasRegistration: !!registration,
@@ -247,5 +209,7 @@ export async function GET() {
 
   } catch (error) {
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  } finally {
+    if (connection) connection.release();
   }
 }

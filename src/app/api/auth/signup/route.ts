@@ -1,81 +1,15 @@
-// import { NextRequest, NextResponse } from 'next/server';
-// import { supabaseAdmin } from '@/lib/db';
-// import { hashPassword, createSession } from '@/lib/auth';
-
-// export async function POST(req: NextRequest) {
-//   try {
-//     const { email, password, fullName } = await req.json();
-    
-//     // Validation
-//     if (!email || !password || !fullName) {
-//       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-//     }
-    
-//     if (password.length < 6) {
-//       return NextResponse.json({ error: 'Password must be at least 6 characters' }, { status: 400 });
-//     }
-    
-//     // Check if user exists
-//     const { data: existing } = await supabaseAdmin
-//       .from('users')
-//       .select('id')
-//       .eq('email', email.toLowerCase())
-//       .single();
-      
-//     if (existing) {
-//       return NextResponse.json({ error: 'Email already registered' }, { status: 409 });
-//     }
-    
-//     // Create user
-//     const passwordHash = await hashPassword(password);
-//     const { data: user, error } = await supabaseAdmin
-//       .from('users')
-//       .insert({
-//         email: email.toLowerCase(),
-//         password_hash: passwordHash,
-//         full_name: fullName,
-//       })
-//       .select()
-//       .single();
-      
-//     if (error || !user) {
-//       return NextResponse.json({ error: 'Failed to create account' }, { status: 500 });
-//     }
-    
-//     // // Create session
-//     // await createSession(user.id);
-    
-//     return NextResponse.json({ 
-//       success: true, 
-//       user: { id: user.id, email: user.email, name: user.full_name } 
-//     });
-    
-//   } catch (error) {
-//     console.error('Signup error:', error);
-//     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/db';
+import { pool } from '@/lib/db';
 import { hashPassword } from '@/lib/auth';
+import mysql from 'mysql2/promise';
 
 export async function POST(req: NextRequest) {
+  let connection: mysql.PoolConnection | null = null;
+  
   try {
     const { email, password, fullName } = await req.json();
     
-    console.log('Signup attempt:', email); // Debug
+    console.log('Signup attempt:', email);
     
     // Validation
     if (!email || !password || !fullName) {
@@ -92,13 +26,17 @@ export async function POST(req: NextRequest) {
       );
     }
     
+    // Get connection
+    connection = await pool.getConnection();
+    
     // Check if user exists
-    const { data: existing } = await supabaseAdmin
-      .from('users')
-      .select('id')
-      .eq('email', email.toLowerCase())
-      .single();
-      
+    const [existingRows] = await connection.execute(
+      'SELECT id FROM users WHERE email = ?',
+      [email.toLowerCase()]
+    );
+    
+    const existing = (existingRows as any[])[0];
+    
     if (existing) {
       return NextResponse.json(
         { error: 'Email already registered. Please login.' }, 
@@ -108,27 +46,23 @@ export async function POST(req: NextRequest) {
     
     // Create user
     const passwordHash = await hashPassword(password);
-    const { data: user, error } = await supabaseAdmin
-      .from('users')
-      .insert({
-        email: email.toLowerCase(),
-        password_hash: passwordHash,
-        full_name: fullName,
-      })
-      .select()
-      .single();
-      
-    if (error || !user) {
-      console.error('User creation error:', error);
-      return NextResponse.json(
-        { error: 'Failed to create account. Please try again.' }, 
-        { status: 500 }
-      );
-    }
+    
+    const [insertResult] = await connection.execute(
+      `INSERT INTO users (id, email, password_hash, full_name) 
+       VALUES (UUID(), ?, ?, ?)`,
+      [email.toLowerCase(), passwordHash, fullName]
+    ) as mysql.ResultSetHeader[];
+    
+    // Get created user using LAST_INSERT_ID() since our ID is UUID
+    const [userRows] = await connection.execute(
+      'SELECT id, email FROM users WHERE email = ?',
+      [email.toLowerCase()]
+    );
+    
+    const user = (userRows as any[])[0];
     
     console.log('User created:', user.id);
     
-    // Return success - let frontend redirect
     return NextResponse.json({ 
       success: true, 
       message: 'Account created successfully',
@@ -141,5 +75,9 @@ export async function POST(req: NextRequest) {
       { error: error.message || 'Internal server error' }, 
       { status: 500 }
     );
+  } finally {
+    if (connection) {
+      connection.release();
+    }
   }
 }
