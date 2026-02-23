@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
     // Set cookie on the response
     response.cookies.set('session_token', token, {
       httpOnly: true,
-      secure: true, // Must be true for Vercel (HTTPS)
+      secure: false, // Must be true for Vercel (HTTPS)
       sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7, // 7 days in seconds
       path: '/',

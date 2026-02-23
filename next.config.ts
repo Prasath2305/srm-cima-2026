@@ -16,8 +16,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Enable standalone output for Docker
-  output: 'standalone',
-  
   reactStrictMode: true,
   
   // If you're using images from external sources

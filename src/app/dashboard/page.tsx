@@ -544,14 +544,14 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#E5E7EB]">
-                  <div>
+                  {/* <div>
                     <label className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-wider block mb-1">
                       Category
                     </label>
                     <span className="inline-flex items-center px-3 py-1 bg-[#EFEFE8] text-[#1E2A2A] rounded-full text-sm">
                       {registration.participant_type}
                     </span>
-                  </div>
+                  </div> */}
                   <div>
                     <label className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-wider block mb-1">
                       Registration ID

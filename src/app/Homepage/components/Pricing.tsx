@@ -26,7 +26,7 @@ export default function Pricing() {
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
           <PricingTicket
             category="UG / PG Students"
-            price="₹1000"
+            price="₹200"
             image="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b"
             includes={[
               'Conference Access',
@@ -48,7 +48,7 @@ export default function Pricing() {
 
           <PricingTicket
             category="Academicians"
-            price="₹2000"
+            price="₹3000"
             image="https://images.unsplash.com/photo-1521737604893-d14cc237f11d"
             includes={[
               'Paper Presentation',
@@ -59,7 +59,7 @@ export default function Pricing() {
 
           <PricingTicket
             category="Industry Persons"
-            price="₹3000"
+            price="₹3500"
             image="https://images.unsplash.com/photo-1504384308090-c894fdcc538d"
             includes={[
               'Industry Sessions',

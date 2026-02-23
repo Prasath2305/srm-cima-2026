@@ -29,15 +29,7 @@
 // }
 
 // export const config = {
-//   matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.png$|.*\\.jpg$).*)'],
-// };
-
-
-
-
-
-
-
+//   matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.p
 
 
 
@@ -46,13 +38,14 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  const token = request.cookies.get('session_token')?.value;
+  const sessionToken = request.cookies.get('session_token')?.value;
+  const adminToken = request.cookies.get('admin_session_token')?.value;
   const path = request.nextUrl.pathname;
 
   // Public paths
   const publicPaths = ['/', '/login', '/signup', '/reset-password', '/api/auth'];
-  
-  const isPublicPath = publicPaths.some(p => 
+
+  const isPublicPath = publicPaths.some(p =>
     path === p || path.startsWith('/api/auth') || path.startsWith('/_next') || path.includes('.')
   );
 
@@ -61,13 +54,25 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check auth for protected routes
-  if (!token) {
+  // Admin/sys-ops routes: allow the login page, protect the dashboard
+  if (path === '/sys-ops' || path.startsWith('/api/sys-ops')) {
+    return NextResponse.next();
+  }
+
+  if (path.startsWith('/sys-ops/')) {
+    if (!adminToken) {
+      return NextResponse.redirect(new URL('/sys-ops', request.url));
+    }
+    return NextResponse.next();
+  }
+
+  // Check auth for regular protected routes
+  if (!sessionToken) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
   // Redirect logged-in users away from login page
-  if (path === '/login' && token) {
+  if (path === '/login' && sessionToken) {
     return NextResponse.redirect(new URL('/register', request.url));
   }
 
