@@ -232,15 +232,26 @@ export default function Hero() {
               </a>
               <a href="" target="_blank" rel="noopener noreferrer">
                 <img 
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzJqExYnzPYlln1NiRVUtSYwLgw1V9xPXv6Q&s" 
+                  src="https://institute.careerguide.com/wp-content/uploads/2023/09/AIMST-1024x1024.png" 
                   alt="Partner 2 Logo"
-                  className="h-20 w-auto opacity-90 hover:opacity-100 transition-opacity"
+                  className="h-20 w-auto opacity-90 hover:opacity-100 transition-opacity bg-white"
+                />
+              </a>
+              <a href="" target="_blank" rel="noopener noreferrer">
+                <img 
+                  src="https://wadhwanifoundation.org/wp-content/uploads/2023/12/ICT-Academy-1024x423.png" 
+                  alt="Partner 3 Logo"
+                  className="h-20 w-auto opacity-90 hover:opacity-100 transition-opacity bg-white"
                 />
               </a>
             </div>
 
             <p className="mb-6 inline-flex items-center rounded-full bg-[#1E2A2A] px-4 py-2 text-xs font-medium tracking-wide text-[#CFFF9E]">
-              INTERNATIONAL CONFERENCE  · MARCH 2026
+              IN ASSOCIATION WITH SRM INSTITUTE OF SCIENCE AND TECHNOLOGY X AIMST UNIVERSITY X ICT ACADEMY
+            </p>
+
+            <p className="mb-6 inline-flex items-center rounded-full bg-[#1E2A2A] px-4 py-2 text-xs font-medium tracking-wide text-[#CFFF9E]">
+              INTERNATIONAL CONFERENCE · MARCH 2026
             </p>
 
             <h2 className="text-3xl md:text-5xl leading-[1.05] font-medium text-[#CFFF9E]">
