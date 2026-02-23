@@ -25,7 +25,8 @@ import {
   Landmark,
   Copy,
   Info,
-  FileCheck
+  FileCheck,
+  Download
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -535,6 +536,34 @@ export default function RegisterPage() {
                       <li>- For other categories: Only the <strong>first author</strong> pays the registration fee</li>
                     </ul>
                   </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Template Downloads */}
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+              <div className="flex items-start gap-3">
+                <Download className="text-emerald-600 mt-0.5 flex-shrink-0" size={20} />
+                <div className="w-full">
+                  <p className="font-semibold text-emerald-900 text-sm mb-3">Download Submission Templates:</p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <a
+                      href="/templates/abstract-template.docx"
+                      download
+                      className="flex items-center gap-2 px-4 py-2.5 bg-white border border-emerald-300 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 text-emerald-800 rounded-xl text-sm font-medium transition-colors"
+                    >
+                      <FileText size={16} />
+                      Abstract Template
+                    </a>
+                    <a
+                      href="/templates/full-paper-template.docx"
+                      download
+                      className="flex items-center gap-2 px-4 py-2.5 bg-white border border-emerald-300 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 text-emerald-800 rounded-xl text-sm font-medium transition-colors"
+                    >
+                      <FileText size={16} />
+                      Full Paper Template
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
