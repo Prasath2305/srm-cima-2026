@@ -41,13 +41,13 @@ type Registration = {
   author_email: string;
   author_whatsapp: string;
   article_title: string;
-  participant_type: string;
   transaction_id: string;
   payment_date: string;
   status: 'pending' | 'approved' | 'rejected' | 'under_review';
   admin_comments?: string;
   abstract_file_path: string;
   payment_screenshot_path: string;
+  full_paper_path?: string;
   created_at: string;
   updated_at: string;
 };
@@ -110,6 +110,24 @@ export default function AdminDashboardPage() {
   const handleLogout = async () => {
     await fetch('/api/sys-ops/auth', { method: 'DELETE' });
     router.push('/sys-ops');
+  };
+
+  const handleExport = async () => {
+    try {
+      const res = await fetch('/api/sys-ops/export');
+      if (!res.ok) throw new Error('Export failed');
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `CIMA2026_Registrations_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Export error:', error);
+    }
   };
 
   const updateStatus = async (id: string, newStatus: string, comments?: string) => {
@@ -187,6 +205,14 @@ export default function AdminDashboardPage() {
               title="Refresh"
             >
               <RefreshCw size={20} />
+            </button>
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg transition-colors text-sm font-medium"
+              title="Export to Excel"
+            >
+              <Download size={16} />
+              Export Excel
             </button>
             <button
               onClick={handleLogout}
@@ -272,7 +298,6 @@ export default function AdminDashboardPage() {
                   <tr>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-[#607274] uppercase tracking-wider">Author Details</th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-[#607274] uppercase tracking-wider">Article Title</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-[#607274] uppercase tracking-wider">Category</th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-[#607274] uppercase tracking-wider">Status</th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-[#607274] uppercase tracking-wider">Submitted</th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-[#607274] uppercase tracking-wider">Documents</th>
@@ -313,12 +338,6 @@ export default function AdminDashboardPage() {
                             <p className="text-sm font-medium text-[#1E2A2A] max-w-xs truncate" title={reg.article_title}>
                               {reg.article_title}
                             </p>
-                          </td>
-                          
-                          <td className="px-6 py-4">
-                            <span className="px-3 py-1 bg-[#EFEFE8] text-[#1E2A2A] rounded-full text-xs font-medium">
-                              {reg.participant_type}
-                            </span>
                           </td>
                           
                           <td className="px-6 py-4">
@@ -367,7 +386,7 @@ export default function AdminDashboardPage() {
                         {/* Expanded Details Row */}
                         {isExpanded && (
                           <tr className="bg-[#FAFAF8] border-b border-[#E5E7EB]">
-                            <td colSpan={7} className="px-6 py-6">
+                            <td colSpan={6} className="px-6 py-6">
                               <motion.div
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: 'auto' }}
@@ -528,6 +547,34 @@ export default function AdminDashboardPage() {
                     </button>
                   </div>
                 </div>
+
+                {/* Full Paper - only shown when approved and uploaded */}
+                {viewingDocs.status === 'approved' && (
+                  <div className="border border-[#E5E7EB] rounded-xl overflow-hidden">
+                    <div className="bg-purple-50 px-4 py-3 border-b border-purple-100 flex items-center gap-2">
+                      <FileText size={20} className="text-purple-600" />
+                      <span className="font-medium text-purple-900">Full Paper</span>
+                      {!viewingDocs.full_paper_path && (
+                        <span className="ml-auto text-xs text-purple-500 italic">Not yet uploaded by author</span>
+                      )}
+                    </div>
+                    <div className="p-4 bg-[#FAFAF8]">
+                      {viewingDocs.full_paper_path ? (
+                        <button
+                          onClick={() => openDocument(viewingDocs.full_paper_path!)}
+                          className="w-full py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+                        >
+                          <Eye size={18} />
+                          View Full Paper
+                        </button>
+                      ) : (
+                        <p className="text-sm text-center text-[#9CA3AF] py-2">
+                          The author has not uploaded the full paper yet.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </motion.div>
           </motion.div>

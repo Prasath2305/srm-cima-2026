@@ -247,7 +247,7 @@ export default function Hero() {
             </div>
 
             <p className="mb-6 inline-flex items-center rounded-full bg-[#1E2A2A] px-4 py-2 text-xs font-medium tracking-wide text-[#CFFF9E]">
-              IN ASSOCIATION WITH SRM INSTITUTE OF SCIENCE AND TECHNOLOGY X AIMST UNIVERSITY X ICT ACADEMY
+              IN COLLABORATION WITH SRM INSTITUTE OF SCIENCE AND TECHNOLOGY X AIMST UNIVERSITY X ICT ACADEMY
             </p>
 
             <p className="mb-6 inline-flex items-center rounded-full bg-[#1E2A2A] px-4 py-2 text-xs font-medium tracking-wide text-[#CFFF9E]">
